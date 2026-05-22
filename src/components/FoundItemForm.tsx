@@ -6,23 +6,27 @@ export default function FoundItemForm() {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
+  const [photo, setPhoto] = useState<File | null>(null);
 
   const handleSubmit = async () => {
     console.log("Button clicked");
 
     try {
+      const formData = new FormData();
+
+      formData.append("name", name);
+      formData.append("location", location);
+      formData.append("description", description);
+
+      if (photo) {
+        formData.append("photo", photo);
+      }
+
       const response = await fetch(
         "https://lost-found-backend-d4wt.onrender.com/report",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name,
-            location,
-            description,
-          }),
+          body: formData,
         }
       );
 
@@ -74,11 +78,25 @@ export default function FoundItemForm() {
       <label style={label}>
         <Upload size={16} /> Photo of Item
       </label>
-      <div style={uploadBox}>
+
+      <label style={uploadBox}>
         <Upload size={30} />
-        <p>Click to upload photo</p>
+        <p>
+          {photo ? photo.name : "Click to upload photo"}
+        </p>
         <small>PNG, JPG up to 10MB</small>
-      </div>
+
+        <input
+          type="file"
+          accept="image/*"
+          style={{ display: "none" }}
+          onChange={(e) => {
+            if (e.target.files && e.target.files[0]) {
+              setPhoto(e.target.files[0]);
+            }
+          }}
+        />
+      </label>
 
       <button style={button} onClick={handleSubmit}>
         Submit Found Item Report
@@ -116,6 +134,7 @@ const uploadBox: CSSProperties = {
   borderRadius: "12px",
   background: "#f8fafc",
   color: "#64748b",
+  cursor: "pointer",
 };
 
 const button = {
