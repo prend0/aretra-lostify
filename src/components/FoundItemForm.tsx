@@ -8,6 +8,9 @@ export default function FoundItemForm() {
   const [description, setDescription] = useState("");
   const [photo, setPhoto] = useState<File | null>(null);
 
+  const [dateFound, setDateFound] = useState("");
+  const [timeFound, setTimeFound] = useState("");
+
   const handleSubmit = async () => {
     console.log("Button clicked");
 
@@ -17,6 +20,8 @@ export default function FoundItemForm() {
       formData.append("name", name);
       formData.append("location", location);
       formData.append("description", description);
+      formData.append("dateFound", dateFound);
+      formData.append("timeFound", timeFound);
 
       if (photo) {
         formData.append("photo", photo);
@@ -75,15 +80,31 @@ export default function FoundItemForm() {
         onChange={(e) => setDescription(e.target.value)}
       />
 
+      {/* DATE PICKER */}
+      <label style={label}>Date Found</label>
+      <input
+        style={input}
+        type="date"
+        value={dateFound}
+        onChange={(e) => setDateFound(e.target.value)}
+      />
+
+      {/* TIME PICKER */}
+      <label style={label}>Time Found</label>
+      <input
+        style={input}
+        type="time"
+        value={timeFound}
+        onChange={(e) => setTimeFound(e.target.value)}
+      />
+
       <label style={label}>
         <Upload size={16} /> Photo of Item
       </label>
 
       <label style={uploadBox}>
         <Upload size={30} />
-        <p>
-          {photo ? photo.name : "Click to upload photo"}
-        </p>
+        <p>{photo ? photo.name : "Click to upload photo"}</p>
         <small>PNG, JPG up to 10MB</small>
 
         <input
